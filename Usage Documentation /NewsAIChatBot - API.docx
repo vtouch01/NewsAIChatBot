@@ -1,0 +1,209 @@
+AI News Chatbot Agent: Code and Installation Guide
+Overview
+This chatbot will be a Python script that runs in your terminal (command prompt). It uses the requests library to connect to the NewsAPI, which offers a free plan suitable for a personal project like this.
+Deliverable 1: Source Code and Files
+You'll need two files:
+news_chatbot.py: The main Python script.
+requirements.txt: A file listing the necessary Python libraries.
+File 1: news_chatbot.py
+This script provides a simple command-line interface (CLI) to get U.S. and World news headlines.
+Python
+# news_chatbot.py
+
+import requests
+import json
+import os
+
+# --- Configuration ---
+# You need to get a free API key from NewsAPI (https://newsapi.org/)
+# and replace 'YOUR_NEWS_API_KEY' below.
+# It's best practice to use an environment variable, but for simplicity,
+# we'll place it here.
+API_KEY = "YOUR_NEWS_API_KEY"
+BASE_URL = "https://newsapi.org/v2/top-headlines"
+
+def fetch_headlines(country_code, category):
+    """Fetches top headlines for a given country and category."""
+    if API_KEY == "YOUR_NEWS_API_KEY":
+        print("ERROR: Please replace 'YOUR_NEWS_API_KEY' in the script with your actual NewsAPI key.")
+        return None
+
+    params = {
+        'country': country_code,
+        'category': category,
+        'apiKey': API_KEY,
+        'pageSize': 5  # Limit to 5 headlines for conciseness
+    }
+
+    try:
+        response = requests.get(BASE_URL, params=params)
+        response.raise_for_status()  # Raise an exception for bad status codes (4xx or 5xx)
+        data = response.json()
+        return data['articles']
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while fetching news: {e}")
+        print("Please check your internet connection or your API key.")
+        return None
+
+def display_headlines(articles, region, category):
+    """Prints the fetched articles to the console."""
+    print(f"\n--- Top 5 {category.capitalize()} Headlines in {region.upper()} ---")
+    if not articles:
+        print("No articles found.")
+        return
+
+    for i, article in enumerate(articles, 1):
+        title = article.get('title', 'No Title')
+        source = article.get('source', {}).get('name', 'Unknown Source')
+        url = article.get('url', 'No URL')
+
+        print(f"{i}. {title}")
+        print(f"   Source: {source}")
+        print(f"   URL: {url}")
+        print("-" * 20)
+
+def main_chatbot_loop():
+    """The main interactive loop for the chatbot."""
+    print("\n👋 Welcome to the AI News Chatbot Agent!")
+    print("You are running version 1.0.0.")
+    print("Available Commands:")
+    print("  'us news' - Get top U.S. headlines (General)")
+    print("  'world news' - Get top World headlines (General)")
+    print("  'us tech' - Get top U.S. Technology headlines")
+    print("  'world business' - Get top World Business headlines")
+    print("  'categories' - See all available categories")
+    print("  'exit' or 'quit' - Close the chatbot")
+    print("-" * 40)
+
+    while True:
+        user_input = input("Enter your news request (e.g., 'us news'): ").strip().lower()
+
+        if user_input in ['exit', 'quit']:
+            print("Thank you for using the News Chatbot. Goodbye! 👋")
+            break
+        elif user_input == 'categories':
+            print("\nAvailable Categories (can be appended to 'us' or 'world' requests):")
+            print("  business, entertainment, general, health, science, sports, technology")
+            continue
+        elif user_input == 'us news':
+            articles = fetch_headlines(country_code='us', category='general')
+            display_headlines(articles, 'US', 'General')
+        elif user_input == 'world news':
+            # NewsAPI uses 'country' codes. 'gb' (UK) is a good proxy for major English-language World News.
+            articles = fetch_headlines(country_code='gb', category='general')
+            display_headlines(articles, 'WORLD (UK Proxy)', 'General')
+        elif user_input == 'us tech':
+            articles = fetch_headlines(country_code='us', category='technology')
+            display_headlines(articles, 'US', 'Technology')
+        elif user_input == 'world business':
+            articles = fetch_headlines(country_code='gb', category='business')
+            display_headlines(articles, 'WORLD (UK Proxy)', 'Business')
+        else:
+            print("I don't recognize that command. Please try 'us news', 'world news', or 'categories'.")
+
+if __name__ == "__main__":
+    main_chatbot_loop()
+
+File 2: requirements.txt
+This file ensures you install the correct Python packages.
+# requirements.txt
+requests
+
+
+Deliverable 2: Step-by-Step Installation Instructions
+Create a new directory (folder) for your project and save the two files above inside it.
+Document File: Chatbot Installation Guide (MacBook Pro)
+Prerequisites: Your MacBook Pro comes with Python pre-installed, but it's best to use a more modern version. We will assume you have a working terminal and internet connection.
+Step 1: Get Your API Key 🔑
+Go to the NewsAPI website: https://newsapi.org/
+Click "Get API Key" and sign up for a free account.
+Once signed up, your unique API key will be displayed. Copy this key.
+Step 2: Set Up the Project Directory
+Open your Terminal application (Press Command + Space and search for "Terminal").
+Create a project directory and navigate into it:
+Bash
+mkdir ai-news-chatbot
+cd ai-news-chatbot
+
+
+Using a text editor (like Nano or VS Code), create the two files:
+Create requirements.txt:
+Bash
+nano requirements.txt
+# Paste the content for requirements.txt (just 'requests') and save (Ctrl+X, Y, Enter)
+
+
+Create news_chatbot.py:
+Bash
+nano news_chatbot.py
+# Paste the Python code for news_chatbot.py
+# IMPORTANT: Find the line `API_KEY = "YOUR_NEWS_API_KEY"` and replace it with your actual key:
+# e.g., API_KEY = "3a8b4c5d6e7f..."
+# Save the file (Ctrl+X, Y, Enter)
+
+
+Step 3: Install Dependencies
+It is a best practice to use a virtual environment to keep project dependencies separate. Create and activate one:
+Bash
+python3 -m venv venv
+source venv/bin/activate
+(You should now see (venv) at the start of your terminal prompt.)
+Install the necessary libraries using the requirements.txt file:
+Bash
+pip install -r requirements.txt
+
+
+Step 4: Run the Chatbot! 🚀
+Execute the Python script:
+Bash
+python3 news_chatbot.py
+
+
+The chatbot prompt will appear! Enter commands like us news, world business, or exit.
+
+Deliverable 3: Instructions for Uploading to GitHub
+This guide assumes you have a GitHub account and the Git version control system installed on your MacBook Pro (it's usually pre-installed).
+Step 1: Initialize Git and Create a Repository
+Make sure you are in your project folder (ai-news-chatbot):
+Bash
+cd ai-news-chatbot
+
+
+Initialize a local Git repository:
+Bash
+git init
+
+
+Create a .gitignore file to avoid uploading unnecessary files like the virtual environment:
+Bash
+nano .gitignore
+# Paste the following and save:
+# venv/
+
+
+Step 2: Commit Your Files
+Add all the project files to the staging area:
+Bash
+git add .
+
+
+Commit the files with an initial message:
+Bash
+git commit -m "Initial commit of the AI News Chatbot"
+
+
+Step 3: Create GitHub Repository and Push
+Go to your GitHub account in your web browser.
+Click the '+' icon in the top right and select "New repository."
+Name it something like ai-news-chatbot, choose Public or Private, and click "Create repository."
+On the next screen, GitHub will show you commands to link your local repository. Use the following two lines (replacing the URL with the one GitHub provides):
+Bash
+# 1. Link your local repository to the remote one on GitHub
+git remote add origin https://github.com/YOUR_USERNAME/ai-news-chatbot.git
+
+# 2. Push your committed files to the main branch
+git push -u origin main
+
+
+Your code is now on GitHub! You can confirm by refreshing your repository page.
+
