@@ -1,0 +1,105 @@
+# 🤖 AI News Agent (LLM-Powered)
+
+## Project Overview
+This project is an advanced Command-Line Interface (CLI) AI agent built in Python that retrieves, reasons about, and summarizes real-time news headlines. Unlike simple scripts, this agent uses **Local Large Language Models (LLMs)** for intelligent tool-use and conversational summaries.
+
+### Key Features:
+* **Intelligent Tool Use:** The Agent dynamically decides which internal tool to call based on the user's natural language request (e.g., general headlines vs. specific keyword search).
+* **Local LLM Integration:** Powered by the open-source **Ollama** framework and the **llama3-groq-tool-use** model for reasoning and summarization, ensuring speed and data privacy.
+* **Open Source & Portable:** Built entirely on Python and free tools, designed to run locally on a MacBook Pro or any Linux/macOS machine.
+
+---
+
+## 🛠️ Prerequisites
+
+Before running the agent, you must have the following installed and configured:
+
+1.  **Python 3.x:** (Already installed on your MacBook Pro).
+2.  **Ollama:** The local LLM server.
+    * Download and install the [Ollama application](https://ollama.com/download) for macOS.
+    * Download the required LLM model via your terminal:
+        ```bash
+        ollama run llama3-groq-tool-use
+        ```
+3.  **NewsAPI Key:** Get a free API key from [NewsAPI](https://newsapi.org/).
+4.  **Virtual Environment:** A clean Python environment is highly recommended.
+
+---
+
+## ⚙️ Installation and Setup
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/YOUR_USERNAME/ai-news-chatbot.git](https://github.com/YOUR_USERNAME/ai-news-chatbot.git)
+cd ai-news-chatbot
+
+### 2. Configure Environment
+Create and activate a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+
+###3. Install Dependencies
+
+'''python
+pip install -r requirements.txt
+
+###4. Configure API Key
+Open the ai_news_agent.py file and replace the placeholder with your actual NewsAPI key:
+
+# ai_news_agent.py (around line 7)
+API_KEY = "YOUR_ACTUAL_NEWS_API_KEY_HERE"
+
+Note: For production use, it is best practice to load this key from an environment variable or a secure file, NOT commit it directly to source code.
+
+###▶️ Usage
+To start the agent, ensure your Ollama application is running in the background.
+
+python3 ai_news_agent.py
+
+Example Commands:
+The agent uses the LLM to interpret your request and choose the correct tool:
+
+User Prompt | Tool Used by Agent | Result
+------------------------------------------
+What's the latest in US sports news?   |  "fetch_top_headlines(country='us'      |   category='sports')",Summarized U.S. Sports Headlines.
+Find me news about the company Tesla.  |   search_news_by_keyword(query='Tesla') |  Summarized articles specifically about Tesla.
+"Hello, tell me a joke."               |  No Tool Call                           |  Direct conversational response from Llama 3.
+
+
+### Project Structure
+
+ai_news_agent.py: The main Python script containing the Agent logic, Tool definitions, Ollama integration, and the main execution loop.
+
+requirements.txt: Lists Python dependencies (requests, ollama).
+
+.gitignore: Specifies files and directories to ignore (e.g., venv/, __pycache__/, and optionally sensitive .env files).
+
+
+### Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+### 📝 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+### ADDITIONAL NOTES
+
+## 🛠️ II. `requirements.txt`
+
+Make sure this file is committed so others can easily install the necessary Python packages.
+
+requests ollama
+
+
+## ⛔ III. `.gitignore`
+
+This file is crucial for a clean GitHub repository. It prevents local environment files from being committed.
+
+Python environment files
+venv/ pycache/ *.pyc
+
+Configuration and secrets (if used later)
+.env API_KEY = "YOUR_ACTUAL_NEWS_API_KEY_HERE"
+
+- DOWNLOADING this version of Ollama to be used on your computer has limited capabilities.  As such, when program calls on 'ollama.chat' - LLM sometimes/sometimes does not give proper response output back.  Some times need to restart the program in order for it to ollama to work. 
